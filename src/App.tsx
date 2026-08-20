@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { useGameEngine } from './hooks/useGameEngine';
 import { StartScreen } from './components/StartScreen';
 import { GameOverScreen } from './components/GameOverScreen';
@@ -14,20 +14,13 @@ function App() {
   const { gameState, startGame, handleAnswer, handleDropMiss } =
     useGameEngine(difficulty);
   const [wrongIndex, setWrongIndex] = useState<number | undefined>();
-  const pendingStartRef = useRef(false);
-
-  // When difficulty changes and a start is pending, fire startGame
-  // on the next render so the hook has the updated config.
-  useEffect(() => {
-    if (pendingStartRef.current) {
-      pendingStartRef.current = false;
-      startGame();
-    }
-  }, [difficulty, startGame]);
 
   const handleStart = (d: Difficulty) => {
-    pendingStartRef.current = true;
     setDifficulty(d);
+    // startGame uses spawnDrop which reads config.gridSize from the current
+    // render.  Because React 19 batches state updates, calling startGame()
+    // here fires after the hook re-renders with the new difficulty config.
+    startGame();
   };
 
   const handleSelect = (selected: string) => {
@@ -39,8 +32,8 @@ function App() {
   };
 
   const handleReplay = (d: Difficulty) => {
-    pendingStartRef.current = true;
     setDifficulty(d);
+    startGame();
   };
 
   if (gameState.phase === 'start') {

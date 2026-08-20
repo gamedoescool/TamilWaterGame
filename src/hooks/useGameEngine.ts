@@ -31,6 +31,7 @@ export function useGameEngine(difficulty: Difficulty) {
   const lastFrameTimeRef = useRef<number>(0);
   const currentDropRef = useRef<DropState | null>(null);
   const handleDropMissRef = useRef<() => void>(() => {});
+  const spawnDropRef = useRef<() => void>(() => {});
   const lastSecondRef = useRef(Math.ceil(60));
 
   currentDropRef.current = currentDrop;
@@ -61,12 +62,14 @@ export function useGameEngine(difficulty: Difficulty) {
     setOptions(allOptions);
   }, [config.gridSize]);
 
+  spawnDropRef.current = spawnDrop;
+
   const handleDropMiss = useCallback(() => {
     setCombo(1);
     playSplash();
     setCurrentDrop(prev => (prev ? { ...prev, status: 'splashed' } : prev));
-    setTimeout(() => spawnDrop(), 200);
-  }, [spawnDrop]);
+    setTimeout(() => spawnDropRef.current(), 200);
+  }, []);
 
   handleDropMissRef.current = handleDropMiss;
 
@@ -76,8 +79,8 @@ export function useGameEngine(difficulty: Difficulty) {
     setCombo(1);
     setTimeRemaining(60000);
     setInputFrozen(false);
-    spawnDrop();
-  }, [spawnDrop]);
+    spawnDropRef.current();
+  }, []);
 
   const handleAnswer = useCallback(
     (selectedCompound: string): { correct: boolean; wrongIndex?: number } => {
@@ -95,7 +98,7 @@ export function useGameEngine(difficulty: Difficulty) {
         setCurrentDrop(prev => (prev ? { ...prev, status: 'popped' } : prev));
         playPop();
         playCombo(Math.min(combo + 1, 3));
-        setTimeout(() => spawnDrop(), 300);
+        setTimeout(() => spawnDropRef.current(), 300);
         return { correct: true };
       }
 
