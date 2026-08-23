@@ -36,19 +36,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  /* Teardrop shape: pointed top, rounded bottom */
+  clip-path: polygon(50% 0%, 80% 30%, 100% 60%, 95% 80%, 75% 95%, 50% 100%, 25% 95%, 5% 80%, 0% 60%, 20% 30%);
   background: var(--drop-bg);
   box-shadow: var(--drop-shadow);
   font-family: var(--tamil-font);
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--text);
-  min-width: 80px;
-  min-height: 60px;
-  padding: 8px 16px;
+  /* Proportional sizing: auto-size based on text content */
+  width: fit-content;
+  min-width: 70px;
+  /* Maintain teardrop aspect ratio */
+  aspect-ratio: 1 / 1.2;
+  padding: 28px 18px 14px 18px;
   z-index: 10;
   will-change: transform;
   cursor: pointer;
+  transform-origin: center center;
 }
 
 .raindrop-falling {
