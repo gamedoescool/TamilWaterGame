@@ -4,7 +4,7 @@ import type { DropState } from '../types';
 interface RaindropProps {
   drop: DropState;
   fallDuration: number;
-  onMiss: () => void;
+  onClick: (dropId: string) => void;
 }
 
 function getHorizontalPosition(id: string): number {
@@ -15,7 +15,7 @@ function getHorizontalPosition(id: string): number {
   return 10 + (Math.abs(hash) % 81);
 }
 
-export function Raindrop({ drop, fallDuration, onMiss }: RaindropProps) {
+export function Raindrop({ drop, fallDuration, onClick }: RaindropProps) {
   const horizontalPos = getHorizontalPosition(drop.id);
 
   const classList = [
@@ -23,15 +23,10 @@ export function Raindrop({ drop, fallDuration, onMiss }: RaindropProps) {
     drop.status === 'falling' && 'raindrop-falling',
     drop.status === 'popped' && 'raindrop-pop',
     drop.status === 'splashed' && 'raindrop-splash',
+    drop.status === 'wrong' && 'raindrop-wrong',
   ]
     .filter(Boolean)
     .join(' ');
-
-  const handleAnimationEnd = () => {
-    if (drop.status === 'falling') {
-      onMiss();
-    }
-  };
 
   return (
     <div
@@ -40,9 +35,9 @@ export function Raindrop({ drop, fallDuration, onMiss }: RaindropProps) {
         '--fall-duration': `${fallDuration}ms`,
         left: `${horizontalPos}%`,
       } as CSSProperties}
-      onAnimationEnd={handleAnimationEnd}
+      onClick={() => onClick(drop.id)}
     >
-      {drop.consonantChar} + {drop.vowelChar}
+      {drop.correctCompound}
     </div>
   );
 }

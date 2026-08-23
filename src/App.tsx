@@ -3,7 +3,7 @@ import { useGameEngine } from './hooks/useGameEngine';
 import { StartScreen } from './components/StartScreen';
 import { GameOverScreen } from './components/GameOverScreen';
 import { Raindrop } from './components/Raindrop';
-import { LetterGrid } from './components/LetterGrid';
+import { TargetDisplay } from './components/TargetDisplay';
 import { HUD } from './components/HUD';
 import type { Difficulty } from './types';
 import { DIFFICULTY_CONFIGS } from './types';
@@ -11,24 +11,12 @@ import './styles/game.css';
 
 function App() {
   const [difficulty, setDifficulty] = useState<Difficulty>('easy');
-  const { gameState, startGame, handleAnswer, handleDropMiss } =
+  const { gameState, startGame, handleDropClick } =
     useGameEngine(difficulty);
-  const [wrongIndex, setWrongIndex] = useState<number | undefined>();
 
   const handleStart = (d: Difficulty) => {
     setDifficulty(d);
-    // startGame uses spawnDrop which reads config.gridSize from the current
-    // render.  Because React 19 batches state updates, calling startGame()
-    // here fires after the hook re-renders with the new difficulty config.
     startGame();
-  };
-
-  const handleSelect = (selected: string) => {
-    const result = handleAnswer(selected);
-    if (!result.correct && result.wrongIndex !== undefined) {
-      setWrongIndex(result.wrongIndex);
-      setTimeout(() => setWrongIndex(undefined), 500);
-    }
   };
 
   const handleReplay = (d: Difficulty) => {
@@ -54,23 +42,24 @@ function App() {
         combo={gameState.combo}
       />
       <div className="sky-area">
-        {gameState.currentDrop &&
-          gameState.currentDrop.status !== 'splashed' && (
+        {gameState.drops
+          .filter(d => d.status !== 'splashed')
+          .map(drop => (
             <Raindrop
-              drop={gameState.currentDrop}
+              key={drop.id}
+              drop={drop}
               fallDuration={config.fallDuration}
-              onMiss={handleDropMiss}
+              onClick={handleDropClick}
             />
-          )}
+          ))}
       </div>
       <div className="water-area">
-        <LetterGrid
-          options={gameState.options}
-          difficulty={difficulty}
-          disabled={gameState.inputFrozen}
-          onSelect={handleSelect}
-          wrongIndex={wrongIndex}
-        />
+        {gameState.targetConsonant && (
+          <TargetDisplay
+            consonant={gameState.targetConsonant}
+            vowel={gameState.targetVowel}
+          />
+        )}
       </div>
     </div>
   );

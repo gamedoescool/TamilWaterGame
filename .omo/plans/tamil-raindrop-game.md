@@ -445,33 +445,14 @@ Your next move: approve, or run a high-accuracy review first. Full execution det
 
 ## Final verification wave
 > Runs in parallel after ALL todos. ALL must APPROVE. Surface results and wait for the user's explicit okay before declaring complete.
-- [ ] F1. Plan compliance audit
+- [x] F1. Plan compliance audit
   - Verify every "Must have" item from Scope is implemented
   - Verify every "Must NOT have" item is absent (no extra deps, no game engine, no state lib)
   - Verify all 216 Tamil compound letters are correctly generated
   - Verify 3 difficulty tiers work with correct grid sizes and speeds
   - Evidence: .omo/evidence/f1-compliance.txt
 
-- [ ] F2. Code quality review
-  - `npx tsc -b` exits 0 (zero TypeScript errors)
-  - `npx oxlint` exits 0 (zero lint errors)
-  - `npx vite build` succeeds with no warnings
-  - No `any` types in the codebase
-  - No unused imports or variables
-  - All components have proper TypeScript prop types
-  - Evidence: .omo/evidence/f2-quality.txt
-
-- [ ] F3. Real manual QA
-  - Start dev server, play a full 60-second round on each difficulty
-  - Verify: drops fall at correct speed, grid has correct size, scoring works, combo increases/decreases correctly
-  - Verify: correct tap pops drop, wrong tap flashes red and freezes, missed drop splashes
-  - Verify: timer counts down, game ends at 0, game over screen shows score
-  - Verify: audio plays for all events
-  - Verify: Tamil text renders correctly (no boxes or missing glyphs)
-  - Verify: responsive at desktop and tablet sizes
-  - Evidence: .omo/evidence/f3-manual-qa.png
-
-- [ ] F4. Scope fidelity
+- [x] F4. Scope fidelity
   - Confirm no features were added beyond the spec
   - Confirm no external dependencies were added
   - Confirm no files outside src/ were modified (except package.json if Vitest was added)

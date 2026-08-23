@@ -5,9 +5,9 @@ interface StartScreenProps {
 }
 
 const DIFFICULTIES: { key: Difficulty; label: string; desc: string }[] = [
-  { key: 'easy', label: 'Easy', desc: '2x2 Grid, Slow' },
-  { key: 'medium', label: 'Medium', desc: '2x3 Grid, Medium' },
-  { key: 'hard', label: 'Hard', desc: '2x4 Grid, Fast' },
+  { key: 'easy', label: 'Easy', desc: 'Slow raindrops' },
+  { key: 'medium', label: 'Medium', desc: 'Average raindrops' },
+  { key: 'hard', label: 'Hard', desc: 'Fast raindrops' },
 ];
 
 export function StartScreen({ onStart }: StartScreenProps) {
