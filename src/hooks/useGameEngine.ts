@@ -28,6 +28,7 @@ export function useGameEngine(difficulty: Difficulty) {
   const cycleTargetRef = useRef<() => void>(() => {});
   const lastSecondRef = useRef(Math.ceil(60));
   const nextSpawnTimeRef = useRef<number>(0);
+  const pauseStartRef = useRef<number>(0);
 
   dropsRef.current = drops;
   targetCompoundRef.current = targetCompound;
@@ -220,6 +221,21 @@ export function useGameEngine(difficulty: Difficulty) {
     }
   }, [timeRemaining, phase]);
 
+  const togglePause = useCallback(() => {
+    if (phase === 'playing') {
+      pauseStartRef.current = performance.now();
+      setPhase('paused');
+    } else if (phase === 'paused') {
+      const pauseDuration = performance.now() - pauseStartRef.current;
+      setDrops(prev => prev.map(d =>
+        d.status === 'falling' ? { ...d, startTime: d.startTime + pauseDuration } : d
+      ));
+      nextSpawnTimeRef.current += pauseDuration;
+      lastFrameTimeRef.current = performance.now();
+      setPhase('playing');
+    }
+  }, [phase]);
+
   const gameState: GameState = {
     phase,
     difficulty,
@@ -237,5 +253,6 @@ export function useGameEngine(difficulty: Difficulty) {
     gameState,
     startGame,
     handleDropClick,
+    togglePause,
   };
 }

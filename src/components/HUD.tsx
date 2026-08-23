@@ -4,6 +4,7 @@ interface HUDProps {
   timeRemaining: number;
   score: number;
   combo: number;
+  onPause: () => void;
 }
 
 function formatTime(ms: number): string {
@@ -13,7 +14,7 @@ function formatTime(ms: number): string {
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
 
-export function HUD({ timeRemaining, score, combo }: HUDProps) {
+export function HUD({ timeRemaining, score, combo, onPause }: HUDProps) {
   const prevComboRef = useRef(combo);
   const [comboPulse, setComboPulse] = useState(false);
 
@@ -39,6 +40,9 @@ export function HUD({ timeRemaining, score, combo }: HUDProps) {
       >
         x{combo}
       </span>
+      <button className="hud-pause-btn" onClick={onPause} aria-label="Pause game">
+        ⏸
+      </button>
     </div>
   );
 }

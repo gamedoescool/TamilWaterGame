@@ -1,6 +1,6 @@
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
-export type GamePhase = 'start' | 'playing' | 'gameover';
+export type GamePhase = 'start' | 'playing' | 'paused' | 'gameover';
 
 export interface DropState {
   id: string;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useGameEngine } from './hooks/useGameEngine';
 import { StartScreen } from './components/StartScreen';
 import { GameOverScreen } from './components/GameOverScreen';
@@ -11,7 +11,7 @@ import './styles/game.css';
 
 function App() {
   const [difficulty, setDifficulty] = useState<Difficulty>('easy');
-  const { gameState, startGame, handleDropClick } =
+  const { gameState, startGame, handleDropClick, togglePause } =
     useGameEngine(difficulty);
 
   const handleStart = (d: Difficulty) => {
@@ -23,6 +23,16 @@ function App() {
     setDifficulty(d);
     startGame();
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && (gameState.phase === 'playing' || gameState.phase === 'paused')) {
+        togglePause();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [gameState.phase, togglePause]);
 
   if (gameState.phase === 'start') {
     return <StartScreen onStart={handleStart} />;
@@ -40,8 +50,9 @@ function App() {
         timeRemaining={gameState.timeRemaining}
         score={gameState.score}
         combo={gameState.combo}
+        onPause={togglePause}
       />
-      <div className="sky-area">
+      <div className={`sky-area${gameState.phase === 'paused' ? ' paused' : ''}`}>
         {gameState.drops
           .filter(d => d.status !== 'splashed')
           .map(drop => (
@@ -61,6 +72,16 @@ function App() {
           />
         )}
       </div>
+      {gameState.phase === 'paused' && (
+        <div className="pause-overlay">
+          <div className="pause-content">
+            <h2>Paused</h2>
+            <button className="pause-resume-btn" onClick={togglePause}>
+              Resume
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
