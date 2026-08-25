@@ -24,7 +24,7 @@ export interface DifficultyConfig {
 export const DIFFICULTY_CONFIGS: Record<Difficulty, DifficultyConfig> = {
   easy: { fallDuration: 7000, spawnIntervalMin: 400, spawnIntervalMax: 1000, maxConcurrentDrops: 6, label: 'Easy' },
   medium: { fallDuration: 5000, spawnIntervalMin: 300, spawnIntervalMax: 800, maxConcurrentDrops: 8, label: 'Medium' },
-  hard: { fallDuration: 3000, spawnIntervalMin: 200, spawnIntervalMax: 500, maxConcurrentDrops: 12, label: 'Hard' },
+  hard: { fallDuration: 5000, spawnIntervalMin: 200, spawnIntervalMax: 500, maxConcurrentDrops: 14, label: 'Hard' },
 };
 
 export interface GameState {
