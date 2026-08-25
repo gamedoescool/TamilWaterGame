@@ -8,6 +8,5 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] })
   ],
-  base: '/TamilWaterGame/', // Replace with your exact GitHub repository name
 
 })
